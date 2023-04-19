@@ -3,11 +3,15 @@ import axios from 'api/axios';
 import requests from 'api/requests';
 import'styles/Banner.css';
 import styled from 'styled-components';
+import MovieModal from './MovieModal';
 
 
 function Banner() {
   const [movie, setMovie] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [movieSelected, setMovieSelected]= useState([]);
+
   useEffect(() => {
     fetchData();
   },[])
@@ -31,6 +35,12 @@ function Banner() {
  return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   }
 
+  const showDet = (movie) => {
+    setShowDetail(true);
+    setMovieSelected(movie);
+  }
+
+
   
 if(!isClicked){
   return (
@@ -44,13 +54,34 @@ if(!isClicked){
           <button className='banner__button play' onClick={()=> setIsClicked(true)}>
             play
           </button>
-          <button className='banner__button info'>
+          <button className='banner__button info' onClick={()=>showDet(true)}>
             More Information
           </button>
-        </div>
+        </div>      
         <p className='banner__description'>
          {truncate(movie.overview, 100)}
         </p>
+        {showDetail && (
+            <div className="presentation">
+            <div className="wrapper-modal">
+              <div className="modal" >
+                <span className="modal-close" >X</span>
+                <img className="modal__poster-img" alt={movie.title ? movie.title : movie.name}
+                 src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`} />
+                <div className="modal__content">
+                  <p className="modal__details">
+                    <span className='modal__user_perc'>100% for you</span> {"   "}
+                    {movie.release_date ? movie.release_date : movie.first_air_date }
+                  </p>
+                  <h2 className="modal__title">{movie.title ? movie.title : movie.name}</h2>
+                  <p className="modal__details">평점 : {movie.vote_average}</p>
+                  <p className="modal__overview">{movie.overview}</p>
+                </div>
+              </div>
+            </div>
+          </div> 
+         
+        )}
       </div>
       <div className='banner--fadeBottom'></div>
     </header>
@@ -60,8 +91,7 @@ if(!isClicked){
         <Container>
           <HomeContainer>
             <Iframe
-            src={`http://www.youtube.com/embed/${movie.videos.results[0]?.key}
-            ?controls=0&autoplay=1&loop=1&mute=1&playlist=${movie.videos.results[0]?.key}`}
+            src={`https://www.youtube.com/embed/${movie.videos.results[0]?.key}?controls=0&autoplay=1&loop=1&mute=1&playlist=${movie.videos.results[0]?.key}`}
             width="640"
             height="360"
             frameBorder="0"
@@ -69,7 +99,9 @@ if(!isClicked){
             ></Iframe>
           </HomeContainer>
         </Container>
+        
       )
+   
     }
 }
 const Container = styled.div`
