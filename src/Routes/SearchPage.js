@@ -46,7 +46,7 @@ function SearchPage() {
           return (
               <div className='movie' > {/* 키값이랑 들어가야함 */}
                 <div className='movie__column-poster' onClick={() => navigate(`/${movie.id}`)}>
-                  <img src={movieImgUrl} alt={movie.title} className='movie__poster'  />
+                  <img src={movieImgUrl} alt={movie.title || movie.name || movie.original_name} className='movie__poster'  />
                   {/* 영화정보들어가는곳 */}
                 </div>
               </div>

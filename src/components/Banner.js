@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'api/axios';
 import requests from 'api/requests';
 import'styles/Banner.css';
 import styled from 'styled-components';
 import MovieModal from './MovieModal';
+import useOnClickOutside from 'hooks/useOnClickOutside';
 
 
-function Banner() {
+function Banner({setModalOpen}) {
   const [movie, setMovie] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [movieSelected, setMovieSelected]= useState([]);
+  const [showMovie, setShowMovie] = useState(false);
+
+
+  const ref = useRef();  
+  useOnClickOutside(ref, () => {setShowDetail(false)});
 
   useEffect(() => {
     fetchData();
@@ -38,8 +44,14 @@ function Banner() {
   const showDet = (movie) => {
     setShowDetail(true);
     setMovieSelected(movie);
+  
   }
 
+  const showMov = (movie) => {
+    setMovieSelected(movie);
+    setShowMovie(true);
+   
+  }  
 
   
 if(!isClicked){
@@ -64,10 +76,14 @@ if(!isClicked){
         {showDetail && (
             <div className="presentation">
             <div className="wrapper-modal">
-              <div className="modal" >
-                <span className="modal-close" >X</span>
+              <div className="modal" ref={ref} >
+                <span className="modal-close"  onClick={() => { setShowDetail(false); setShowMovie(false);}} >X</span>
+                {showMovie && (
+                  <Iframe src={`https://www.youtube.com/embed/${movie.videos.results[0]?.key}?controls=0&autoplay=1&loop=1&mute=1&playlist=${movie.videos.results[0]?.key}`}></Iframe>
+                )}
                 <img className="modal__poster-img" alt={movie.title ? movie.title : movie.name}
-                 src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`} />
+                 src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`} onClick={() => showMov(true)}/>
+                
                 <div className="modal__content">
                   <p className="modal__details">
                     <span className='modal__user_perc'>100% for you</span> {"   "}
@@ -82,6 +98,7 @@ if(!isClicked){
           </div> 
          
         )}
+        
       </div>
       <div className='banner--fadeBottom'></div>
     </header>

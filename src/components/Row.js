@@ -10,10 +10,13 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 
+
 function Row({isLargeRow, title, id, fetchUrl}) {
   const [movies, setMovies] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [movieSelected, setMovieSelected]= useState([]);
+ 
+ 
   
   useEffect(() => {
     fetchMovieData();
@@ -21,9 +24,10 @@ function Row({isLargeRow, title, id, fetchUrl}) {
 
   const fetchMovieData = async () => {
     const request = await axios.get(fetchUrl);
-    console.log(request)
-    setMovies(request.data.results);
+    console.log('request',request)
 
+
+    setMovies(request.data.results);
   }
 
   const handleClick = (movie) => {
@@ -32,6 +36,10 @@ function Row({isLargeRow, title, id, fetchUrl}) {
     setMovieSelected(movie);
   }
 
+  // const handleHover = (movie) => {
+    
+  // }
+  
   return (
     <section className='row' key={id}>
       <h2>{title}</h2>
@@ -67,15 +75,18 @@ function Row({isLargeRow, title, id, fetchUrl}) {
         </div> */}
         <div id={id} className='row__posters'>
           {movies.map((movie) => (
-            <SwiperSlide>
+            <SwiperSlide key={movie.id}>
             <img 
               key={movie.id}
               onClick={() => handleClick(movie)}
+              // onMouseEnter={()=> handleHover(movie)}
               className={`row__poster ${isLargeRow && "row__posterLarge"}`}
               src={`https://image.tmdb.org/t/p/original/${isLargeRow ? movie.poster_path : movie.backdrop_path}`}
               loading='lazy'
               alt={movie.title || movie.name || movie.original_name}
-            />
+            />        
+          {/* <Iframe src={`https://www.youtube.com/embed/${movie.videos.results[0]?.key}?controls=0&autoplay=1&loop=1&mute=1&playlist=${movie.videos.results[0]?.key}`}></Iframe> */}
+               
             </SwiperSlide>
           ))}  
         </div>
@@ -89,7 +100,7 @@ function Row({isLargeRow, title, id, fetchUrl}) {
       </div> */}
 
       {modalOpen && (
-        <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
+        <MovieModal {...movieSelected} setModalOpen={setModalOpen} movieId={movieSelected.id} />
       )}  
     </section>
   )
