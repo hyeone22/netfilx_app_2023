@@ -1,13 +1,14 @@
 import axios from '../api/axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import '../styles/DetailPage.css';
 
 function DetailPage() {
   const [movie, setMovie] = useState({});
   let {movieId} = useParams();
   console.log('useParams()->',useParams())
   console.log('movieId->',movieId);
-
+  console.log('movie',movie);
   useEffect(() => {
     fetchData();
   },[movieId])
@@ -27,34 +28,44 @@ function DetailPage() {
 
   // }
   return (
-
-    <header className='banner' style={{
+    <>
+    <div className='detail' style={{
       backgroundImage: `url("https://image.tmdb.org/t/p/original/${movie.backdrop_path}")`, backgroundPosition: "top center",backgroundSize: "cover"}}>
-      <div className='banner__contents'>
-        <h1 className='banner__title'>
+      <div className='detail__contents'>
+        <h1 className='detail__title'>
           {movie.title || movie.name || movie.original_name}
         </h1>
-        <div className='banner__buttons'>
-          <button className='banner__button play' /*onClick={()=> setIsClicked(true)}*/>
+        <div className='detail__buttons'>
+          <button className='detail__button play' /*onClick={()=> setIsClicked(true)}*/>
             play
           </button>
-          <button className='banner__button info'>
+          <button className='detail__button info'>
             More Information
           </button>
         </div>
-        <p className='banner__description'>
-         {truncate(movie.overview, 100)}
+        <p className='detail__description'>
+         {movie.tagline}
         </p>
       </div>
-      <div className='banner--fadeBottom'></div>
-    </header>
-    // <section>
-    //   <img src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`} 
-    //   alt={movie.title || movie.name || movie.original_name}/>
-    //   <h2>{movie.original_title}</h2>
-    //   <p>{movie.overview}</p>
 
-    // </section>
+      <div className='detail--fadeBottom'></div>
+    </div>
+        <div className='detail_list'>
+          <div className='detail_poster' style={{
+             backgroundImage:`url("https://image.tmdb.org/t/p/w500/${movie.backdrop_path || 'default_image_url'}")`}}>
+          </div>
+          <div className='detail_poster' style={{
+            backgroundImage:`url("https://image.tmdb.org/t/p/w500/${movie.backdrop_path}")`}}>
+          </div>
+          <div className='detail_poster' style={{
+            backgroundImage:`url("https://image.tmdb.org/t/p/w500/${movie.poster_path}")`}}>
+          </div>
+          <div className='detail_poster' style={{
+             backgroundImage:`url("https://image.tmdb.org/t/p/w500/${movie.backdrop_path || 'default_image_url'}")`}}>
+          </div>
+        </div>
+        </>
+                // {movie.belongs_to_collection.backdrop_path}
   )
 }
 

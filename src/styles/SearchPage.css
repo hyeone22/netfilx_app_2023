@@ -6,3 +6,6 @@
 
 .no-results{display: flex;justify-content: center;align-content: center;height: 100%;padding: 8rem;
   color: #c5c5c5;}
+
+.search__posterOverlay{color: #c5c5c5;border: 1px solid red;}
+p{font-size: 12px;}

@@ -36,9 +36,9 @@ function Row({isLargeRow, title, id, fetchUrl}) {
     setMovieSelected(movie);
   }
 
-  // const handleHover = (movie) => {
-    
-  // }
+  const handleHover = (movie) => {
+    setMovieSelected(movie);
+  }
   
   return (
     <section className='row' key={id}>
@@ -76,17 +76,24 @@ function Row({isLargeRow, title, id, fetchUrl}) {
         <div id={id} className='row__posters'>
           {movies.map((movie) => (
             <SwiperSlide key={movie.id}>
+              <div className='row_id_name' 
+                onMouseEnter={()=> handleHover(movie)}
+                /*onMouseLeave={()=> handleHover(null)}*/>
             <img 
               key={movie.id}
               onClick={() => handleClick(movie)}
-              // onMouseEnter={()=> handleHover(movie)}
+              
               className={`row__poster ${isLargeRow && "row__posterLarge"}`}
               src={`https://image.tmdb.org/t/p/original/${isLargeRow ? movie.poster_path : movie.backdrop_path}`}
               loading='lazy'
               alt={movie.title || movie.name || movie.original_name}
-            />        
-          {/* <Iframe src={`https://www.youtube.com/embed/${movie.videos.results[0]?.key}?controls=0&autoplay=1&loop=1&mute=1&playlist=${movie.videos.results[0]?.key}`}></Iframe> */}
-               
+            />
+            {movieSelected && movieSelected.id === movie.id && (
+            <div className="row__posterOverlay">
+             <h3>{movie.title || movie.name || movie.original_name}</h3>
+            </div>
+            )}           
+            </div>
             </SwiperSlide>
           ))}  
         </div>
