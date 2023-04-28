@@ -1,44 +1,62 @@
-import DetailPage from "Routes/DetailPage";
-import MainPage from "Routes/MainPage";
-import SearchPage from "Routes/SearchPage";
-import Footer from "components/Footer";
+import { useState, useEffect } from "react";
+import { Routes, Route, Outlet } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { authService } from "./fbase";
+import Auth from './Routes/Auth';
+import MainPage from "./Routes/MainPage";
+import DetailPage from "./Routes/DetailPage";
+import SearchPage from "./Routes/SearchPage";
 import Nav from "components/Nav";
-import { Outlet, Route, Routes } from "react-router-dom";
-import "styles/App.css";
+import Footer from "components/Footer";
+import './styles/App.css'
+import Profile from "Routes/Profile";
 
 const Layout = () => {
-  return(
+  return (
     <div>
       <Nav />
       <Outlet />
       <Footer />
     </div>
-  // layout 컴포넌트를 만들어줘 
-  )  
-}
+  );
+};
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [init, setInit] = useState(false);
+  const [userObj, setUserObj] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(authService, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUserObj(user);
+      } else {
+        setIsLoggedIn(false);
+        setUserObj(null);
+      }
+      setInit(true);
+    });
+  }, []);
+
+  if (!init) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="app">
-        <Routes>
+      <Routes>
+        {isLoggedIn ? (
           <Route path="/" element={<Layout />}>
             <Route index element={<MainPage />} />
             <Route path=":movieId" element={<DetailPage />} />
             <Route path="search" element={<SearchPage />} />
-            {/* 프로필페이지만들어여기 */}
-          </Route>  
-        </Routes>
-      {/* <Nav />
-      <Banner />
-      <Row title="NETFLIX ORIGINALS" id="NO" fetchUrl={requests.fetchNetflixOriginals} isLargeRow />
-      <Row title="Trending Now" id="TN" fetchUrl={requests.fetchTrending} />
-      <Row title="Top Rated" id="TR" fetchUrl={requests.fetchTopRated} />
-      <Row title="Animation Movie" id="AM" fetchUrl={requests.fetchAnimationMovies} />
-      <Row title="Family Movie" id="FM" fetchUrl={requests.fetchFamilyMovies} />
-      <Row title="Adventure Movie" id="DM" fetchUrl={requests.fetchAdventureMovies} />
-      <Row title="Science Fiction Movie" id="SM" fetchUrl={requests.fetchScienceFictionMovies} />
-      <Row title="Action Movie" id="CM" fetchUrl={requests.fetchAction} />
-      <Footer /> */}
+            <Route path="profile" element={<Profile />} />
+          </Route>
+        ) : (
+          <Route path="/" element={<Auth />} />
+        )}
+      </Routes>
     </div>
   );
 }
