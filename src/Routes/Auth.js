@@ -1,6 +1,7 @@
 import { authService } from 'fbase';
 import { GithubAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import '../styles/Auth.css';
 
 function Auth() {
   const [email, setEmail] = useState('');
@@ -56,26 +57,24 @@ function Auth() {
   return (
     <div className='auth'>
       <section className='auth_background'>
-      <h2 className='blind'>Chatting Api</h2>
-      <h3>Chatting App</h3>
-      </section>
-      <form onSubmit={onSubmit}>
+      <h2>Sign in</h2>
+      <form className='Net_submit' onSubmit={onSubmit}>
         <input name='email' type='email' placeholder='Email' required 
         value={email} onChange={onChange} />
         <input name='password' type='password' placeholder='Password' required 
         value={password} onChange={onChange} />
         <input type='submit' value={newAccount ? "Create Account" : "Log In"}
-          className='auth_input_account' />
+          className='auth_input_account'/>
         {error && <span className="authError">{error}</span>}
       </form>
-      <span onClick={toggleAccount}>
-        {newAccount ? "Sign In" : "Create Account"}
+      <span className='sign_in' onClick={toggleAccount}>
+        {newAccount ? "Sign In" : "Create Account"} Or Login with
       </span>
-      <p>Or Login with</p>
-      <div>
-        <button onClick={onSocialClick} name="google" className='auth_google' >Continue with Google</button>
-        <button onClick={onSocialClick} name="github" className='auth_github' >Continue with Github</button>
+      <div className='button_social'>
+        <button onClick={onSocialClick} name="google" className='auth_social' >Google 계정으로 로그인</button>
+        <button onClick={onSocialClick} name="github" className='auth_social' >Github 계정으로 로그인</button>
       </div>
+      </section>
     </div>
   )
 }
